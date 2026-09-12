@@ -35,12 +35,7 @@ export default async function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/encounters/new"
-            className="ml-1 rounded bg-ink px-3 py-1.5 text-sm text-paper transition-colors hover:bg-accent"
-          >
-            {t("nav.write")}
-          </Link>
+          {/* 导航栏不放「写一条」按钮：写入口在首页发帖框，关于页底部也有 CTA */}
           {/* 没启用登录（演示模式）时不渲染登录入口，否则点了会报错 */}
           {isAuthConfigured ? <AuthMenu author={author} /> : null}
           <LanguageSwitcher />
