@@ -141,9 +141,30 @@ npm run db:init          # 依据 db/schema.sql 建表与索引
 ### 线上（Vercel / Neon）
 
 1. 推送到 GitHub，在 Vercel 中 **Import** 该仓库，框架会自动识别为 Next.js，无需额外构建配置。
-2. 项目内进入 **Storage → Create Database → Postgres**，创建完成后连接串会自动注入为 `DATABASE_URL`。
-3. 本地 `.env.local` 填入同一连接串，执行一次 `npm run db:init`（建表）。
-4. 重新部署，线上即可写入记录。
+2. 项目内进入 **Storage → Create Database → Postgres**，创建完成后连接串会自动注入为 `DATABASE_URL`
+   （选带 `-pooler` 的 pooled 连接串；`channel_binding` / `sslmode` 参数保留即可）。
+3. 在 **Settings → Environment Variables** 补上其余变量——缺失不会报错，只会静默降级：
+
+   | 变量 | 缺失后果 |
+   | --- | --- |
+   | `NEXT_PUBLIC_SITE_URL` | sitemap / robots / og:url 指向 localhost |
+   | `AUTH_SECRET` | 导航栏没有登录按钮，站点退化为只读 |
+   | `AUTH_DISCORD_ID` / `AUTH_DISCORD_SECRET` | 同上 |
+   | `ADMIN_DISCORD_IDS` | 无法清理他人内容，也接管不了历史记录 |
+
+   `ADMIN_DISCORD_IDS` 要填 **Discord 用户 ID（一串数字）**，填 @用户名不报错但永远匹配不上。
+4. 建表：临时把命令指向该库执行一次 `npm run db:init`，不必改动 `.env.local`：
+
+   ```bash
+   DATABASE_URL='线上连接串' npm run db:init
+   ```
+
+   Windows PowerShell 下是 `$env:DATABASE_URL='线上连接串'; npm run db:init`。
+   跑完记得清掉这个临时变量（`Remove-Item Env:DATABASE_URL`），否则它会覆盖 `.env.local`
+   里的本地连接串，之后本地开发就直接写线上库了。
+5. 到 Discord 开发者后台 **OAuth2 → Redirects** 补一条
+   `https://你的域名/api/auth/callback/discord`，否则线上点登录会报 `redirect_uri` 不合法。
+6. 重新部署，线上即可写入记录。
 
 ### 关于两种驱动
 
