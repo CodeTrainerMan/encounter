@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "title": "Encounter — Every meeting is worth writing down",
+    "titleTemplate": "%s — Encounter",
+    "description": "A quiet record of the people, places, works and moments you come across.",
+    "home": {
+      "title": "Feed",
+      "description": "One stream: post at the top, read everything below."
+    },
+    "encounters": {
+      "title": "All entries",
+      "description": "Browse every entry by type, tag or keyword."
+    },
+    "new": {
+      "title": "Write an entry",
+      "description": "Keep a record of a new meeting."
+    },
+    "edit": {
+      "title": "Edit entry"
+    },
+    "about": {
+      "title": "About",
+      "description": "What Encounter is, and how to deploy it on Vercel."
+    },
+    "missing": "Entry not found",
+    "editOf": "Edit: {title}"
+  },
+  "brand": {
+    "name": "Encounter",
+    "subtitle": "a ledger of meetings"
+  },
+  "nav": {
+    "timeline": "Timeline",
+    "entries": "All entries",
+    "about": "About",
+    "write": "Write"
+  },
+  "language": {
+    "label": "Language",
+    "en": "EN",
+    "zh": "中文"
+  },
+  "auth": {
+    "signIn": "Sign in with Discord",
+    "signOut": "Sign out",
+    "required": "This site keeps a record of the people met on Discord. Sign in to write your own — it only reads your username and avatar."
+  },
+  "reactions": {
+    "label": "Leave a reaction",
+    "add": "Add this reaction",
+    "whoReacted": "Reacted by {names}",
+    "like": "Like this post",
+    "likedBy": "Liked by {names}"
+  },
+  "comments": {
+    "label": "Comments",
+    "count": "{count, plural, =0 {No comments yet} =1 {1 comment} other {# comments}}",
+    "placeholder": "Say something back…",
+    "post": "Comment",
+    "posting": "Posting…",
+    "signInHint": "Sign in to leave a comment.",
+    "signIn": "Sign in with Discord",
+    "disabled": "Discord sign-in is not configured, so comments are unavailable.",
+    "delete": "Delete",
+    "deletePending": "Deleting…",
+    "deleteConfirm": "Delete this comment? This cannot be undone."
+  },
+  "footer": {
+    "tagline": "Encounter — every meeting, written down",
+    "builtWith": "Next.js on Vercel"
+  },
+  "types": {
+    "person": { "label": "Person", "description": "You met someone" },
+    "place": { "label": "Place", "description": "You came across a place" },
+    "work": { "label": "Work", "description": "A book, a film, a song…" },
+    "moment": { "label": "Moment", "description": "A moment worth keeping" }
+  },
+  "count": {
+    "entries": "{count, plural, =0 {no entries} =1 {1 entry} other {# entries}}"
+  },
+  "home": {
+    "eyebrow": "WHY THIS EXISTS",
+    "headline": "It began in a Discord chat where I was learning English",
+    "designNote": "The idea came out of learning English on Discord. Talking with people there late into the evening, I kept running into small moments worth holding on to — and nowhere to put them. So I built this place: an open invitation to the friends I met in those chats to sign in with their own account and write down what we came across. One stream, newest first. Like a post, leave a comment, and see what everyone else noticed.",
+    "emptyTitle": "The stream is still empty",
+    "emptyDescription": "Write the first thing up there and it will show up right here."
+  },
+  "composer": {
+    "placeholder": "Who or what did you come across lately?",
+    "more": "More options",
+    "less": "Fewer options",
+    "post": "Post",
+    "posting": "Posting…",
+    "typeLabel": "This is about",
+    "date": "The day it happened",
+    "location": "Where (optional)",
+    "locationPlaceholder": "A city, a street, page 42 of a book…",
+    "tags": "Tags (comma or space separated, up to 12)",
+    "tagsPlaceholder": "city, stranger, rain",
+    "favorite": "Mark as worth revisiting",
+    "signInHint": "Sign in and you can post right here.",
+    "signIn": "Sign in with Discord",
+    "disabled": "No database or Discord sign-in is configured yet, so posting is unavailable."
+  },
+  "feed": {
+    "at": "at {location}"
+  },
+  "list": {
+    "headingAll": "All entries",
+    "headingPerson": "People met",
+    "headingPlace": "Places met",
+    "headingWork": "Works met",
+    "headingMoment": "Moments met",
+    "summaryTag": " · tag “{tag}”",
+    "summaryQuery": " · keyword “{query}”",
+    "summaryFavorite": " · worth revisiting only",
+    "deleted": "Entry deleted.",
+    "filterEmptyTitle": "Nothing matches these filters",
+    "filterEmptyDescription": "Try a different combination, or write down this meeting.",
+    "filterEmptyAction": "Clear filters",
+    "filterAll": "All",
+    "filterFavorite": "★ Worth revisiting",
+    "searchPlaceholder": "Search title, body, place…",
+    "search": "Search",
+    "tagsLabel": "Tags"
+  },
+  "detail": {
+    "back": "← All entries",
+    "favorite": "· Worth revisiting",
+    "noBody": "This entry has a title but no body yet.",
+    "edit": "Edit",
+    "created": "Written {date}",
+    "older": "Earlier",
+    "newer": "Later"
+  },
+  "new": {
+    "back": "← Back to the timeline",
+    "title": "Write an entry",
+    "description": "Write only what you are sure you remember — the blank space is part of the record.",
+    "submit": "Save this entry"
+  },
+  "edit": {
+    "back": "← Back to this entry",
+    "title": "Edit entry",
+    "created": "Created {date}",
+    "submit": "Save changes"
+  },
+  "form": {
+    "title": "Title",
+    "titlePlaceholder": "Give this meeting a name",
+    "typeLegend": "This is about",
+    "date": "The day it happened",
+    "location": "Where (optional)",
+    "locationPlaceholder": "A city, a street, page 42 of a book…",
+    "summary": "One-line summary",
+    "summaryPlaceholder": "If you could keep only one sentence, which one would it be?",
+    "content": "Body",
+    "contentPlaceholder": "Blank lines start new paragraphs. Write whatever comes to mind.",
+    "tags": "Tags (comma or space separated, up to 12)",
+    "tagsPlaceholder": "city, stranger, rain",
+    "rating": "Impression",
+    "ratingNone": "Not rated",
+    "cover": "Cover image URL (optional)",
+    "favorite": "Mark as worth revisiting",
+    "submit": "Save",
+    "submitPending": "Saving…",
+    "note": "It goes live on the timeline immediately"
+  },
+  "delete": {
+    "label": "Delete",
+    "pending": "Deleting…",
+    "confirm": "Delete this entry? This cannot be undone."
+  },
+  "errors": {
+    "titleRequired": "Please add a title.",
+    "titleTooLong": "Titles are limited to 120 characters.",
+    "dateInvalid": "Please pick a valid date.",
+    "summaryTooLong": "Keep the summary under 200 characters.",
+    "coverInvalid": "The cover needs to be a full http(s) link.",
+    "bodyRequired": "The post is still empty — write something first.",
+    "bodyTooLong": "A post can be up to 2000 characters.",
+    "contentRequired": "Write something before posting.",
+    "contentTooLong": "A comment can be up to 1000 characters.",
+    "commentNotFound": "That comment no longer exists.",
+    "notFound": "That entry no longer exists or has been deleted.",
+    "databaseMissing": "No database is configured, so nothing can be saved.",
+    "signInRequired": "Please sign in with Discord first.",
+    "forbidden": "You can only edit or delete entries you wrote yourself.",
+    "unknown": "Something went wrong. Please try again."
+  },
+  "about": {
+    "eyebrow": "ABOUT",
+    "title": "About Encounter",
+    "intro": "A site that does one thing: writes meetings down. It does not ask for completeness, and it does not ask you to keep going — just a line whenever you remember someone, pass somewhere, or finish a book.",
+    "typesTitle": "Four kinds of meetings",
+    "dataTitle": "Where the data lives",
+    "dataIntro": "Everything lives in the PostgreSQL database behind {envVar} — there is no second copy.",
+    "dataEmptyTitle": "Without it",
+    "dataEmptyBody": "— the site still opens, but the stream is empty and nothing can be saved.",
+    "dataLiveTitle": "With it",
+    "dataLiveBody": "— you can post, react, comment, edit and delete right here, and every entry belongs to whoever wrote it.",
+    "deployTitle": "Deploy to Vercel",
+    "deployStep1": "Push the repository to GitHub and import it in Vercel. The framework is detected as Next.js automatically.",
+    "deployStep2": "In the Vercel project open Storage → Create Database → Postgres. The connection string is injected as {envVar} for you.",
+    "deployStep3": "Put the same connection string in your local .env file, then run {init} to create the tables.",
+    "deployStep4": "Redeploy once and you can write entries in production.",
+    "stackTitle": "Stack",
+    "stackBody": "Next.js App Router with Server Components and Server Actions, Tailwind CSS, next-intl for English and Chinese, and PostgreSQL through the Neon serverless driver. Everything runs on Vercel — no extra backend, no client-side state library.",
+    "cta": "Write an entry"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "This entry is not here",
+    "description": "It may have been deleted, or the link is mistyped.",
+    "action": "Back to the timeline"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "fallback": "The page failed to load. Please try again.",
+    "retry": "Retry"
+  }
+}
