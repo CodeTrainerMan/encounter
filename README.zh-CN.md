@@ -6,9 +6,9 @@
 
 界面提供 **English（默认）** 与 **中文** 两套语言。
 
-- 首页时间流：版式参考 X（Twitter），顶部一句设计说明，下面就是发帖框与全部记录
+- 首页时间流：整站就是这一条时间流——X 风格的纵列，顶栏、发帖框，下面就是全部记录
 - 快速发帖：只写正文就能发布，标题由正文首行推导，类型 / 日期 / 地点 / 标签收在「更多选项」里
-- 全部记录页：按类型 / 标签 / 关键词 / 收藏筛选
+- 时间流内互动：点赞、留言直接在帖子里完成，不必点进详情页
 - 详情页：正文、标签、印象分、上下一条导航、表情反应、编辑与删除
 - 写记录：类型、日期、地点、摘要、正文、标签、评分、封面图、收藏
 - 登录：Discord OAuth（Auth.js），记录带作者署名与头像，**谁写的谁能改**
@@ -18,6 +18,15 @@
 数据存在 **PostgreSQL**（Vercel Postgres / Neon），国际化使用 **next-intl**，
 登录使用 **Auth.js（NextAuth v5）** 的 Discord Provider，
 部署在 **Vercel**，没有额外的后端服务。
+
+## 设计
+
+版式照 X 走：640px 一列、56px 悬浮顶栏、一个内联发帖框，帖子之间用 1px 分隔线而不是卡片。
+配色是 X 那样的纯白，另加一套跟随 `prefers-color-scheme` 的深色主题。
+
+换肤靠 `src/app/globals.css` 里在这条媒体查询中覆盖设计令牌实现。Tailwind 的工具类在运行时读取
+`var(--color-*)`，所以组件只写 `bg-paper` / `text-ink` / `border-line`，任何地方都不需要 `dark:`
+变体。
 
 ---
 
@@ -42,17 +51,17 @@ npm run dev
 
 ## 国际化
 
-英文为默认语言，中文走 `/zh` 前缀：
+英文为默认语言，中文走 `/zh` 前缀。全站只有时间流、单条记录的详情页与整表单页：
 
 | 路径 | 语言 |
 | --- | --- |
-| `/`、`/encounters`、`/encounters/new`、`/about` | English |
-| `/zh`、`/zh/encounters`、`/zh/encounters/new`、`/zh/about` | 中文 |
+| `/`、`/encounters/<slug>`、`/encounters/<slug>/edit`、`/encounters/new` | English |
+| `/zh`、`/zh/encounters/<slug>`、`/zh/encounters/<slug>/edit`、`/zh/encounters/new` | 中文 |
 
 实现要点：
 
-- 文案集中在 `messages/en.json` 与 `messages/zh.json`，按 `meta` / `nav` / `home` / `list` /
-  `form` / `errors` / `about` 等命名空间组织
+- 文案集中在 `messages/en.json` 与 `messages/zh.json`，按 `meta` / `brand` / `home` /
+  `composer` / `feed` / `detail` / `form` / `errors` 等命名空间组织
 - 语言清单在 `src/lib/types.ts` 的 `LOCALES`，路由策略在 `src/i18n/routing.ts`；
   `localePrefix: "as-needed"` 让默认语言（英文）不出现前缀
 - `src/middleware.ts` 负责识别并重定向语言，`src/i18n/navigation.ts` 导出的
@@ -192,12 +201,10 @@ scripts/db-init.mjs          建表脚本
 src/i18n/                    routing / navigation / request 配置
 src/middleware.ts            语言路由中间件
 src/app/[locale]/            路由与页面（语言段）
-  layout.tsx                 根布局：html lang、导航、页脚
-  page.tsx                   首页：设计说明 + 发帖框 + 时间流
-  encounters/page.tsx        列表与筛选
+  layout.tsx                 外壳：html lang、顶栏、640px 纵列
+  page.tsx                   首页：时间流（发帖框 + 帖子流）
   encounters/[slug]/         详情、编辑
-  encounters/new/            新建
-  about/                     关于与部署说明
+  encounters/new/            新建（整表单）
   not-found.tsx / error.tsx  404 与错误边界
   api/auth/[...nextauth]/    Auth.js 的 Discord 登录回调
 src/app/sitemap.ts           双语言 sitemap（含 hreflang alternates）
@@ -206,7 +213,7 @@ src/auth.ts                  Auth.js 配置（Discord Provider、JWT 回调）
 src/actions/encounters.ts    Server Actions（发帖 / 保存 / 删除）
 src/actions/reactions.ts     Server Actions（贴 / 取消表情）
 src/actions/auth.ts          Server Actions（登录 / 退出）
-src/components/              UI 组件（含 PostComposer / PostCard / LanguageSwitcher / AuthMenu / ReactionBar）
+src/components/              UI 组件（含 PostComposer / PostCard / Avatar / LanguageSwitcher / AuthMenu）
 src/lib/db.ts                数据库连接与「是否已配置」判定
 src/lib/encounters.ts        数据访问层（查询、统计、增删改，含权限校验）
 src/lib/reactions.ts         表情反应数据访问层
