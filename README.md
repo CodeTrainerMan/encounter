@@ -6,9 +6,9 @@ A place to record every encounter — people, places, works, and those fleeting 
 
 The UI ships in two languages: **English (default)** and **Chinese**.
 
-- **Home timeline** — layout inspired by X (Twitter): one line of design notes at the top, then the composer and every record below it
+- **One page, one column** — the whole site is the timeline: an X-style column with a top bar, an inline composer and the stream below it
 - **Quick post** — write the body and publish; the title is derived from the first line, while type / date / location / tags stay tucked under "More options"
-- **All records** — filter by type / tag / keyword / favorite
+- **Feed interactions** — like and comment straight from the feed, without a trip into the detail page
 - **Detail page** — body, tags, rating, previous/next navigation, emoji reactions, edit and delete
 - **Write a record** — type, date, location, summary, body, tags, rating, cover image, favorite
 - **Sign in** — Discord OAuth (Auth.js); records carry the author's name and avatar, and **only the author can edit their own**
@@ -18,6 +18,16 @@ The whole site is built on **Next.js (App Router + Server Components + Server Ac
 with data in **PostgreSQL** (Vercel Postgres / Neon), i18n via **next-intl**,
 sign-in via the **Auth.js (NextAuth v5)** Discord provider,
 and deployment on **Vercel**. There is no separate backend service.
+
+## Design
+
+The layout follows X: a 640px column, a 56px sticky top bar, one inline composer, and posts divided by
+1px rules instead of cards. The palette is X-like white, plus a dark variant that follows
+`prefers-color-scheme`.
+
+Theming works by overriding the design tokens in `src/app/globals.css` inside that media query. Tailwind
+utilities resolve `var(--color-*)` at runtime, so components only ever write `bg-paper` / `text-ink` /
+`border-line` — no `dark:` variant is needed anywhere.
 
 ---
 
@@ -44,17 +54,18 @@ required Discord OAuth variables from "Sign-in and reactions" below (plus the op
 
 ## Internationalization
 
-English is the default locale; Chinese lives under the `/zh` prefix:
+English is the default locale; Chinese lives under the `/zh` prefix. Only the timeline, a record's detail
+page and the full-form editor exist:
 
 | Path | Language |
 | --- | --- |
-| `/`, `/encounters`, `/encounters/new`, `/about` | English |
-| `/zh`, `/zh/encounters`, `/zh/encounters/new`, `/zh/about` | Chinese |
+| `/`, `/encounters/<slug>`, `/encounters/<slug>/edit`, `/encounters/new` | English |
+| `/zh`, `/zh/encounters/<slug>`, `/zh/encounters/<slug>/edit`, `/zh/encounters/new` | Chinese |
 
 How it works:
 
 - Copy is centralized in `messages/en.json` and `messages/zh.json`, organized into namespaces such as
-  `meta` / `nav` / `home` / `list` / `form` / `errors` / `about`
+  `meta` / `brand` / `home` / `composer` / `feed` / `detail` / `form` / `errors`
 - The locale list is `LOCALES` in `src/lib/types.ts`, the routing strategy in `src/i18n/routing.ts`;
   `localePrefix: "as-needed"` keeps the prefix off the default locale (English)
 - `src/middleware.ts` detects and redirects by locale, and the `Link` / `redirect` / `useRouter` exported
@@ -208,12 +219,10 @@ scripts/db-init.mjs          Schema bootstrap script
 src/i18n/                    routing / navigation / request configuration
 src/middleware.ts            Locale routing middleware
 src/app/[locale]/            Routes and pages (locale segment)
-  layout.tsx                 Root layout: html lang, header, footer
-  page.tsx                   Home: design notes + composer + timeline
-  encounters/page.tsx        List and filters
+  layout.tsx                 Shell: html lang, top bar, 640px column
+  page.tsx                   Home: the timeline (composer + stream)
   encounters/[slug]/         Detail, edit
-  encounters/new/            New record
-  about/                     About and deployment notes
+  encounters/new/            New record (full form)
   not-found.tsx / error.tsx  404 and error boundary
   api/auth/[...nextauth]/    Auth.js Discord callback
 src/app/sitemap.ts           Bilingual sitemap (with hreflang alternates)
@@ -222,7 +231,7 @@ src/auth.ts                  Auth.js config (Discord provider, JWT callbacks)
 src/actions/encounters.ts    Server Actions (post / save / delete)
 src/actions/reactions.ts     Server Actions (add / remove reaction)
 src/actions/auth.ts          Server Actions (sign in / out)
-src/components/              UI components (PostComposer / PostCard / LanguageSwitcher / AuthMenu / ReactionBar)
+src/components/              UI components (PostComposer / PostCard / Avatar / LanguageSwitcher / AuthMenu)
 src/lib/db.ts                Database connection and "is it configured" check
 src/lib/encounters.ts        Data access layer (queries, stats, CRUD, permission checks)
 src/lib/reactions.ts         Reaction data access layer
