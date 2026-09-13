@@ -294,3 +294,7 @@ npm run db:init        # initialize the database schema
 docker compose up -d   # start the local PostgreSQL
 docker compose down    # stop the local PostgreSQL
 ```
+
+## License
+
+Released under the [MIT License](./LICENSE).
