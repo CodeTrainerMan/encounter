@@ -123,6 +123,19 @@ database at all), the site automatically falls back to **read-only**: pages brow
 sign-in button disappears and the home composer plus the detail-page reaction bar are replaced by a
 sign-in prompt — no button that only turns into an error once you click it.
 
+### Self-hosting: the "signed in but still logged out" trap
+
+Auth.js trusts the request `Host` under `next dev`, but not in a production server — `next start`, Docker,
+anything that is not Vercel. There it refuses the host, `auth()` comes back without a session, and the site
+fails in a way that points at the wrong place: Discord sign-in completes, the redirect returns, and every
+page still renders as signed out.
+
+`src/auth.ts` therefore sets `trustHost: true`, so `npm run dev`, `npm run start` and Vercel all behave the
+same. One related trap when you put the app behind a reverse proxy: if the proxy rewrites the `Host`
+header, point `AUTH_URL` at the public origin (for example `https://encounter.example.com`), otherwise the
+callback URL Auth.js builds will not match the redirect registered in the Discord developer portal and
+sign-in fails with an invalid `redirect_uri`.
+
 ### Permission model
 
 There is exactly one rule: **only the author can edit their own records.** On top of it sits an admin

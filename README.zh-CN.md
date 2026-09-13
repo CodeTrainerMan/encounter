@@ -114,6 +114,17 @@ npm run dev
 站点会自动退化成 **只读**：页面照常浏览，但导航栏不出现登录按钮，首页的发帖框与详情页的表情入口
 都会换成登录提示——按钮不会因为缺密钥而变成点了报错的陷阱。
 
+### 自托管：登录成功却仍显示未登录
+
+`next dev` 下 Auth.js 信任请求的 `Host`，但生产服务器（`next start`、Docker，凡是不是 Vercel 的场景）
+默认不信任：它会拒绝这个 Host，`auth()` 拿不到会话，于是症状非常有迷惑性——Discord 登录走完了、
+也跳回来了，页面却始终显示未登录，排查时容易往错的方向找。
+
+因此 `src/auth.ts` 里显式写了 `trustHost: true`，让 `npm run dev` / `npm run start` / Vercel 三种跑法
+行为一致。反向代理场景还有一个相关的坑：代理改写了 `Host` 头时，要把 `AUTH_URL` 指向对外域名
+（例如 `https://encounter.example.com`），否则 Auth.js 拼出的回调地址与 Discord 开发者后台登记的那条
+对不上，登录会报 `redirect_uri` 不合法。
+
 ### 权限模型
 
 规则只有一条：**谁写的谁能改**。另有一个管理员概念（`ADMIN_DISCORD_IDS`），用途有两个：
