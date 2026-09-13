@@ -9,6 +9,7 @@
 - 首页时间流：整站就是这一条时间流——X 风格的纵列，顶栏、发帖框，下面就是全部记录
 - 快速发帖：只写正文就能发布，标题由正文首行推导，类型 / 日期 / 地点 / 标签收在「更多选项」里
 - 时间流内互动：点赞、留言直接在帖子里完成，不必点进详情页
+- 浏览量：每被真正打开一次就 +1，评论、点赞、浏览量排在同一条 X 式互动条上
 - 详情页：正文、标签、印象分、上下一条导航、表情反应、编辑与删除
 - 写记录：类型、日期、地点、摘要、正文、标签、评分、封面图、收藏
 - 登录：Discord OAuth（Auth.js），记录带作者署名与头像，**谁写的谁能改**
@@ -23,6 +24,10 @@
 
 版式照 X 走：640px 一列、56px 悬浮顶栏、一个内联发帖框，帖子之间用 1px 分隔线而不是卡片。
 配色是 X 那样的纯白，另加一套跟随 `prefers-color-scheme` 的深色主题。
+
+每条帖子下面都是 X 的那排互动：回复、点赞、浏览量、打开。图标外面一层圆在悬停时染上该动作自己的
+颜色，旁边的数字跟着变色，点过赞的心是实心粉色。计数一万以下给准确值（`1,234`），再往上缩写成
+`12.4K`（`src/lib/utils.ts` 的 `formatCount`）。
 
 换肤靠 `src/app/globals.css` 里在这条媒体查询中覆盖设计令牌实现。Tailwind 的工具类在运行时读取
 `var(--color-*)`，所以组件只写 `bg-paper` / `text-ink` / `border-line`，任何地方都不需要 `dark:`
@@ -146,8 +151,9 @@ npm run db:init          # 依据 db/schema.sql 建表与索引
 ```
 
 > `db/schema.sql` 里全部是 `if not exists`，可以安全重复执行。**已经在跑的老库**再执行一次
-> `npm run db:init` 即完成迁移：补上 `authors`、`encounter_reactions` 两张表，以及
-> `encounters.author_id` 列（旧记录的该列为空，因此只读，由管理员接管）。
+> `npm run db:init` 即完成迁移：补上 `authors`、`encounter_reactions` 两张表，
+> `encounters.views` 浏览量列，以及 `encounters.author_id` 列（旧记录的作者列为空，因此只读，
+> 由管理员接管）。
 
 ### 线上（Vercel / Neon）
 
@@ -242,6 +248,7 @@ src/lib/form-state.ts        表单状态与错误 key 映射
 | `cover_image` | text | 封面图链接 |
 | `rating` | int | 印象分 1–5 |
 | `favorite` | boolean | 是否标记为值得回看 |
+| `views` | int | 浏览量，详情页每被真正打开一次 +1（路由预取不算） |
 | `author_id` | uuid | 作者，外键指向 `authors`；为空表示接入登录之前的历史记录（只读） |
 | `created_at` / `updated_at` | timestamptz | 时间戳 |
 

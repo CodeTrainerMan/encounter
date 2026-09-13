@@ -27,6 +27,9 @@
   --color-line-strong: #cfd9de;
   --color-accent: #1d9bf0;
   --color-accent-soft: #e8f5fe;
+  /* 互动条上「点赞」的专属色：X 的心是粉色，和回复 / 浏览用的强调蓝区分开 */
+  --color-like: #f91880;
+  --color-like-soft: #fce8f3;
 }
 
 @layer base {
@@ -62,6 +65,8 @@
     --color-line-strong: #3e4144;
     --color-accent: #1d9bf0;
     --color-accent-soft: #12293b;
+    --color-like: #f91880;
+    --color-like-soft: #2a0e1a;
   }
 
   ::selection {

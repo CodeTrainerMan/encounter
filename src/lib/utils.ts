@@ -114,3 +114,21 @@ export function excerpt(text: string | null, length = 80): string {
   const flat = text.replace(/\s+/g, " ").trim();
   return flat.length > length ? `${flat.slice(0, length)}…` : flat;
 }
+
+/** 去掉小数点后多余的 0：12.0K → 12K，1.2K 保持原样 */
+function trimDecimal(value: number): string {
+  return value.toFixed(1).replace(/\.0$/, "");
+}
+
+/**
+ * 互动计数的显示格式，照 X 的数法：
+ * 一万以下给准确数（1,234），再往上缩写成 1.2万 前的 12.3K / 1.2M。
+ * 用 K / M 而不是中文的「万」，是因为两种语言下都能一眼读懂。
+ */
+export function formatCount(value: number): string {
+  const count = Math.max(0, Math.trunc(value));
+
+  if (count < 10_000) return count.toLocaleString("en-US");
+  if (count < 1_000_000) return `${trimDecimal(count / 1_000)}K`;
+  return `${trimDecimal(count / 1_000_000)}M`;
+}

@@ -35,6 +35,7 @@ interface EncounterRow {
   cover_image: string | null;
   rating: number | null;
   favorite: boolean;
+  views: number | null;
   author_id: string | null;
   created_at: unknown;
   updated_at: unknown;
@@ -91,6 +92,7 @@ function mapRow(row: EncounterRow): Encounter {
     coverImage: row.cover_image,
     rating: row.rating ?? null,
     favorite: Boolean(row.favorite),
+    views: Number(row.views ?? 0),
     authorId: row.author_id,
     author: mapAuthor(row),
     createdAt: toTimestamp(row.created_at),
@@ -295,6 +297,20 @@ export async function deleteEncounter(id: string, actor: Author | null): Promise
 
   const db = requireDatabase();
   await db(`delete from encounters where id = $1`, [id]);
+}
+
+/**
+ * 记一次浏览：把这条记录的计数 +1。
+ *
+ * 和读取不同，这里**不吞异常**：写失败多半是库结构没跟上（忘了 `npm run db:init`），
+ * 静默掉就永远只看到一个 0，反而更难查。调用方把它放在响应发出去之后跑
+ * （详情页的 `after()`），所以抛出来也不会把这次浏览变成错误页。
+ */
+export async function recordView(encounterId: string): Promise<void> {
+  if (!isDatabaseConfigured) return;
+
+  const db = requireDatabase();
+  await db(`update encounters set views = views + 1 where id = $1`, [encounterId]);
 }
 
 export interface EncounterStats {

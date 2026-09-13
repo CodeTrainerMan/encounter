@@ -16,6 +16,7 @@ create table if not exists encounters (
   cover_image text,
   rating      integer check (rating is null or (rating >= 1 and rating <= 5)),
   favorite    boolean not null default false,
+  views       integer not null default 0,
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
@@ -24,6 +25,15 @@ create index if not exists encounters_happened_at_idx on encounters (happened_at
 create index if not exists encounters_type_idx        on encounters (type);
 create index if not exists encounters_favorite_idx    on encounters (favorite) where favorite;
 create index if not exists encounters_tags_idx        on encounters using gin (tags);
+
+-- ============================================================
+-- 浏览量
+-- ------------------------------------------------------------
+-- 详情页每被打开一次就 +1，时间流与详情页上的那个数字就是它。
+-- 单独用 alter 补一列而不是只写进上面的 create table：
+-- `create table if not exists` 碰到已经建好的表直接跳过，老库拿不到这一列。
+-- ============================================================
+alter table encounters add column if not exists views integer not null default 0;
 
 -- ============================================================
 -- 作者：一个作者 = 一个 Discord 账号

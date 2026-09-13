@@ -80,7 +80,9 @@
   },
   "feed": {
     "at": "在 {location}",
-    "deleted": "记录已删除。"
+    "deleted": "记录已删除。",
+    "views": "{count} 次浏览",
+    "open": "打开这条记录"
   },
   "detail": {
     "back": "← 返回时间流",
@@ -88,6 +90,7 @@
     "noBody": "这条记录只有标题，还没有正文。",
     "edit": "编辑",
     "created": "记于 {date}",
+    "views": "{count} 次浏览",
     "older": "更早一条",
     "newer": "更新一条"
   },

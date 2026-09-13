@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { getTranslations } from "next-intl/server";
 import { isAuthConfigured } from "@/auth";
 import AuthorByline from "@/components/AuthorByline";
@@ -10,12 +12,12 @@ import ReactionBar from "@/components/ReactionBar";
 import TypeBadge from "@/components/TypeBadge";
 import { Link } from "@/i18n/navigation";
 import { listComments } from "@/lib/comments";
-import { getEncounterBySlug, listEncounters } from "@/lib/encounters";
+import { getEncounterBySlug, listEncounters, recordView } from "@/lib/encounters";
 import { canManage } from "@/lib/permissions";
 import { getReactions } from "@/lib/reactions";
 import { getCurrentAuthor } from "@/lib/session";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/types";
-import { formatDate, isTitleOnlyBody, toParagraphs } from "@/lib/utils";
+import { formatCount, formatDate, isTitleOnlyBody, toParagraphs } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +65,17 @@ export default async function EncounterDetailPage({ params }: PageParams) {
   const showBody = paragraphs.length > 0 && !isTitleOnlyBody(item.content, item.title);
   const selfHref = `/encounters/${encodeURIComponent(item.slug)}`;
 
+  // 浏览量 +1，但等这次响应发出去之后再写。
+  // 放在渲染之后有两个理由：不该为了一次计数让读者多等一个来回，
+  // 而且它跑在响应之外，写失败也只会记进服务端日志，不会把这页变成错误页。
+  // 显示的仍是写入前的值——和 X 一样，自己这一次浏览要等下次打开才计入。
+  //
+  // 悬停时间流里的帖子时 Next 会预取这一页，那不算浏览：预取请求带着这个头，
+  // 真跳转不带。不挡掉的话，光标划过几条帖子就会凭空多出几个浏览量。
+  if ((await headers()).get("next-router-prefetch") === null) {
+    after(() => recordView(item.id));
+  }
+
   return (
     <article className="mx-auto max-w-2xl px-4 pt-6 sm:px-6">
       <Link href="/" className="text-xs text-muted transition-colors hover:text-accent">
@@ -109,6 +122,11 @@ export default async function EncounterDetailPage({ params }: PageParams) {
       ) : paragraphs.length === 0 ? (
         <p className="mt-9 text-sm text-muted">{t("noBody")}</p>
       ) : null}
+
+      {/* 浏览量：X 把这条灰字放在正文下面，时间流里的那个数字就是它 */}
+      <p className="mt-5 text-[13px] text-muted">
+        {t("views", { count: formatCount(item.views) })}
+      </p>
 
       {item.tags.length > 0 ? (
         <div className="mt-10 flex flex-wrap gap-2 border-t border-line pt-6">

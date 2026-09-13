@@ -9,6 +9,7 @@ The UI ships in two languages: **English (default)** and **Chinese**.
 - **One page, one column** — the whole site is the timeline: an X-style column with a top bar, an inline composer and the stream below it
 - **Quick post** — write the body and publish; the title is derived from the first line, while type / date / location / tags stay tucked under "More options"
 - **Feed interactions** — like and comment straight from the feed, without a trip into the detail page
+- **View counts** — every real visit to an entry bumps its counter, so comments, likes and views line up in one X-style action row
 - **Detail page** — body, tags, rating, previous/next navigation, emoji reactions, edit and delete
 - **Write a record** — type, date, location, summary, body, tags, rating, cover image, favorite
 - **Sign in** — Discord OAuth (Auth.js); records carry the author's name and avatar, and **only the author can edit their own**
@@ -24,6 +25,11 @@ and deployment on **Vercel**. There is no separate backend service.
 The layout follows X: a 640px column, a 56px sticky top bar, one inline composer, and posts divided by
 1px rules instead of cards. The palette is X-like white, plus a dark variant that follows
 `prefers-color-scheme`.
+
+Every post closes with X's action row — reply, like, views, open. The icon sits in a circle that fills
+with the action's own colour on hover, the number beside it takes that colour too, and a like turns the
+heart solid pink. Counts read `1,234` below ten thousand and `12.4K` above it (`formatCount` in
+`src/lib/utils.ts`).
 
 Theming works by overriding the design tokens in `src/app/globals.css` inside that media query. Tailwind
 utilities resolve `var(--color-*)` at runtime, so components only ever write `bg-paper` / `text-ink` /
@@ -158,8 +164,8 @@ npm run db:init          # create tables and indexes from db/schema.sql
 
 > Everything in `db/schema.sql` is `if not exists`, so it is safe to re-run. For an **already running old
 > database**, re-running `npm run db:init` performs the migration: it adds the `authors` and
-> `encounter_reactions` tables plus the `encounters.author_id` column (the column is null on old records,
-> which makes them read-only until an admin takes them over).
+> `encounter_reactions` tables, the `encounters.views` counter, and the `encounters.author_id` column (the
+> author column is null on old records, which makes them read-only until an admin takes them over).
 
 ### Production (Vercel / Neon)
 
@@ -260,6 +266,7 @@ src/lib/form-state.ts        Form state and error-key mapping
 | `cover_image` | text | Cover image URL |
 | `rating` | int | Rating 1–5 |
 | `favorite` | boolean | Whether it is marked as worth revisiting |
+| `views` | int | View counter, +1 per real visit to the detail page (route prefetches do not count) |
 | `author_id` | uuid | Author, foreign key to `authors`; null means a historical record from before sign-in (read-only) |
 | `created_at` / `updated_at` | timestamptz | Timestamps |
 
