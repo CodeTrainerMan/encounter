@@ -7,10 +7,6 @@
       "title": "Feed",
       "description": "One stream: post at the top, read everything below."
     },
-    "encounters": {
-      "title": "All entries",
-      "description": "Browse every entry by type, tag or keyword."
-    },
     "new": {
       "title": "Write an entry",
       "description": "Keep a record of a new meeting."
@@ -18,22 +14,12 @@
     "edit": {
       "title": "Edit entry"
     },
-    "about": {
-      "title": "About",
-      "description": "What Encounter is, and how to deploy it on Vercel."
-    },
     "missing": "Entry not found",
     "editOf": "Edit: {title}"
   },
   "brand": {
     "name": "Encounter",
     "subtitle": "a ledger of meetings"
-  },
-  "nav": {
-    "timeline": "Timeline",
-    "entries": "All entries",
-    "about": "About",
-    "write": "Write"
   },
   "language": {
     "label": "Language",
@@ -65,23 +51,13 @@
     "deletePending": "Deleting…",
     "deleteConfirm": "Delete this comment? This cannot be undone."
   },
-  "footer": {
-    "tagline": "Encounter — every meeting, written down",
-    "builtWith": "Next.js on Vercel"
-  },
   "types": {
     "person": { "label": "Person", "description": "You met someone" },
     "place": { "label": "Place", "description": "You came across a place" },
     "work": { "label": "Work", "description": "A book, a film, a song…" },
     "moment": { "label": "Moment", "description": "A moment worth keeping" }
   },
-  "count": {
-    "entries": "{count, plural, =0 {no entries} =1 {1 entry} other {# entries}}"
-  },
   "home": {
-    "eyebrow": "WHY THIS EXISTS",
-    "headline": "It began in a Discord chat where I was learning English",
-    "designNote": "The idea came out of learning English on Discord. Talking with people there late into the evening, I kept running into small moments worth holding on to — and nowhere to put them. So I built this place: an open invitation to the friends I met in those chats to sign in with their own account and write down what we came across. One stream, newest first. Like a post, leave a comment, and see what everyone else noticed.",
     "emptyTitle": "The stream is still empty",
     "emptyDescription": "Write the first thing up there and it will show up right here."
   },
@@ -103,29 +79,11 @@
     "disabled": "No database or Discord sign-in is configured yet, so posting is unavailable."
   },
   "feed": {
-    "at": "at {location}"
-  },
-  "list": {
-    "headingAll": "All entries",
-    "headingPerson": "People met",
-    "headingPlace": "Places met",
-    "headingWork": "Works met",
-    "headingMoment": "Moments met",
-    "summaryTag": " · tag “{tag}”",
-    "summaryQuery": " · keyword “{query}”",
-    "summaryFavorite": " · worth revisiting only",
-    "deleted": "Entry deleted.",
-    "filterEmptyTitle": "Nothing matches these filters",
-    "filterEmptyDescription": "Try a different combination, or write down this meeting.",
-    "filterEmptyAction": "Clear filters",
-    "filterAll": "All",
-    "filterFavorite": "★ Worth revisiting",
-    "searchPlaceholder": "Search title, body, place…",
-    "search": "Search",
-    "tagsLabel": "Tags"
+    "at": "at {location}",
+    "deleted": "Entry deleted."
   },
   "detail": {
-    "back": "← All entries",
+    "back": "← Back to the timeline",
     "favorite": "· Worth revisiting",
     "noBody": "This entry has a title but no body yet.",
     "edit": "Edit",
@@ -187,26 +145,6 @@
     "signInRequired": "Please sign in with Discord first.",
     "forbidden": "You can only edit or delete entries you wrote yourself.",
     "unknown": "Something went wrong. Please try again."
-  },
-  "about": {
-    "eyebrow": "ABOUT",
-    "title": "About Encounter",
-    "intro": "A site that does one thing: writes meetings down. It does not ask for completeness, and it does not ask you to keep going — just a line whenever you remember someone, pass somewhere, or finish a book.",
-    "typesTitle": "Four kinds of meetings",
-    "dataTitle": "Where the data lives",
-    "dataIntro": "Everything lives in the PostgreSQL database behind {envVar} — there is no second copy.",
-    "dataEmptyTitle": "Without it",
-    "dataEmptyBody": "— the site still opens, but the stream is empty and nothing can be saved.",
-    "dataLiveTitle": "With it",
-    "dataLiveBody": "— you can post, react, comment, edit and delete right here, and every entry belongs to whoever wrote it.",
-    "deployTitle": "Deploy to Vercel",
-    "deployStep1": "Push the repository to GitHub and import it in Vercel. The framework is detected as Next.js automatically.",
-    "deployStep2": "In the Vercel project open Storage → Create Database → Postgres. The connection string is injected as {envVar} for you.",
-    "deployStep3": "Put the same connection string in your local .env file, then run {init} to create the tables.",
-    "deployStep4": "Redeploy once and you can write entries in production.",
-    "stackTitle": "Stack",
-    "stackBody": "Next.js App Router with Server Components and Server Actions, Tailwind CSS, next-intl for English and Chinese, and PostgreSQL through the Neon serverless driver. Everything runs on Vercel — no extra backend, no client-side state library.",
-    "cta": "Write an entry"
   },
   "notFound": {
     "code": "404",

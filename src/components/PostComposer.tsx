@@ -19,13 +19,16 @@ import { todayISO } from "@/lib/utils";
 import Avatar from "./Avatar";
 
 const fieldClass =
-  "w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/15";
+  "w-full rounded border border-line bg-paper px-3 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/15";
 
-const labelClass = "mb-1.5 block text-xs font-medium tracking-wide text-muted";
+const labelClass = "mb-1.5 block text-xs font-medium text-muted";
 
 /**
- * 首页发帖框。
+ * 时间流顶端的发帖框。
  * ------------------------------------------------------------
+ * 版式照 X 的编辑框走：头像在左，输入区不画边框，只有在获得焦点时
+ * 才让人意识到它是一个输入框；右下角一个蓝色胶囊按钮负责发布。
+ *
  * 默认只有一行输入 + 发布按钮：打开站点就能发一条，不必先填一整张表。
  * 「更多选项」里才露出类型、日期、地点、标签——它们都有默认值，
  * 不展开也能正常发布。
@@ -57,7 +60,7 @@ export default function PostComposer({
   // 没配置 Discord 登录：谁都发不了，直接说明，不画一个点了会报错的按钮
   if (!authEnabled) {
     return (
-      <p className="border-b border-line px-4 py-4 text-sm leading-relaxed text-muted sm:px-5">
+      <p className="border-b border-line px-4 py-4 text-[15px] leading-relaxed text-muted">
         {t("disabled")}
       </p>
     );
@@ -67,15 +70,15 @@ export default function PostComposer({
     return (
       <form
         action={signInWithDiscordAction}
-        className="flex items-center gap-3 border-b border-line px-4 py-4 sm:px-5"
+        className="flex items-center gap-3 border-b border-line px-4 py-3"
       >
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="returnTo" value={localeHref(locale, pathname)} />
         <Avatar author={null} />
-        <span className="min-w-0 flex-1 text-sm text-muted">{t("signInHint")}</span>
+        <span className="min-w-0 flex-1 text-[15px] text-muted">{t("signInHint")}</span>
         <button
           type="submit"
-          className="shrink-0 whitespace-nowrap rounded bg-ink px-4 py-2 text-sm text-paper transition-colors hover:bg-accent"
+          className="shrink-0 whitespace-nowrap rounded-full bg-accent px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
         >
           {t("signIn")}
         </button>
@@ -84,7 +87,7 @@ export default function PostComposer({
   }
 
   return (
-    <form action={formAction} className="border-b border-line px-4 py-4 sm:px-5">
+    <form action={formAction} className="border-b border-line px-4 py-3">
       <input type="hidden" name="locale" value={locale} />
 
       <div className="flex gap-3">
@@ -95,9 +98,9 @@ export default function PostComposer({
             name="body"
             value={body}
             onChange={(event) => setBody(event.target.value)}
-            rows={expanded ? 5 : 2}
+            rows={expanded ? 4 : 1}
             placeholder={t("placeholder")}
-            className="w-full resize-none border-0 bg-transparent text-[15px] leading-relaxed text-ink outline-none placeholder:text-muted/70"
+            className="w-full resize-none border-0 bg-transparent py-1.5 text-[17px] leading-6 text-ink outline-none placeholder:text-muted"
           />
 
           {expanded ? (
@@ -117,7 +120,7 @@ export default function PostComposer({
                           onChange={() => setType(value)}
                           className="peer sr-only"
                         />
-                        <span className="flex items-center gap-1.5 rounded border border-line px-3 py-2 text-sm text-ink-soft transition-colors peer-checked:border-accent peer-checked:bg-accent-soft peer-checked:text-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent/20">
+                        <span className="flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink-soft transition-colors peer-checked:border-accent peer-checked:bg-accent-soft peer-checked:text-accent peer-focus-visible:ring-2 peer-focus-visible:ring-accent/20">
                           <span
                             className="h-1.5 w-1.5 shrink-0 rounded-full"
                             style={{ backgroundColor: color }}
@@ -171,22 +174,26 @@ export default function PostComposer({
               </div>
 
               <label className="flex w-fit cursor-pointer items-center gap-2 text-sm text-ink-soft">
-                <input type="checkbox" name="favorite" className="h-4 w-4 accent-[#b45309]" />
+                <input
+                  type="checkbox"
+                  name="favorite"
+                  className="h-4 w-4 accent-[var(--color-accent)]"
+                />
                 {t("favorite")}
               </label>
             </div>
           ) : null}
 
           {state.messageKey ? (
-            <p className="mt-2 text-xs text-red-600">{tErrors(state.messageKey)}</p>
+            <p className="mt-2 text-[13px] text-red-500">{tErrors(state.messageKey)}</p>
           ) : null}
 
-          <div className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
+          <div className="mt-2 flex items-center justify-between gap-3 border-t border-line pt-2.5">
             <button
               type="button"
               onClick={() => setExpanded((value) => !value)}
               aria-expanded={expanded}
-              className="text-xs text-muted transition-colors hover:text-accent"
+              className="rounded-full px-2.5 py-1 text-[13px] font-medium text-accent transition-colors hover:bg-accent-soft"
             >
               {expanded ? t("less") : t("more")}
             </button>
@@ -194,7 +201,7 @@ export default function PostComposer({
             <button
               type="submit"
               disabled={pending || body.trim().length === 0}
-              className="rounded bg-ink px-5 py-2 text-sm text-paper transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-full bg-accent px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {pending ? t("posting") : t("post")}
             </button>
