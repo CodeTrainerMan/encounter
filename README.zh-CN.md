@@ -276,3 +276,7 @@ npm run db:init        # 初始化数据库结构
 docker compose up -d   # 启动本地 PostgreSQL
 docker compose down    # 停止本地 PostgreSQL
 ```
+
+## 许可证
+
+本项目基于 [MIT 许可证](./LICENSE) 开源。
