@@ -24,11 +24,17 @@ yarn-error.log*
 *.log
 
 # env files
+# 只放行 .env.example（纯占位符）；其余 .env* 一律不入库——
+# .env / .env.local / .env.production / .env.development 都可能写进真实密钥
 .env
-.env*.local
+.env*
+!.env.example
 
 # vercel
 .vercel
+
+# 本地数据导出与种子数据（pg_dump / 备份等），不要入库
+/data
 
 # typescript
 *.tsbuildinfo
