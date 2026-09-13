@@ -80,7 +80,9 @@
   },
   "feed": {
     "at": "at {location}",
-    "deleted": "Entry deleted."
+    "deleted": "Entry deleted.",
+    "views": "{count} Views",
+    "open": "Open this entry"
   },
   "detail": {
     "back": "← Back to the timeline",
@@ -88,6 +90,7 @@
     "noBody": "This entry has a title but no body yet.",
     "edit": "Edit",
     "created": "Written {date}",
+    "views": "{count} Views",
     "older": "Earlier",
     "newer": "Later"
   },

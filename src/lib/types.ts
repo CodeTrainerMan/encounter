@@ -111,6 +111,11 @@ export interface Encounter {
   /** 印象分 1-5，可为空 */
   rating: number | null;
   favorite: boolean;
+  /**
+   * 浏览量：详情页被打开过多少次。
+   * 只累加、不记录「谁看过」——这里要的是热度，不是访客名单。
+   */
+  views: number;
   /** 作者，为 null 表示是接入登录之前的历史记录（只读） */
   authorId: string | null;
   author: Author | null;
