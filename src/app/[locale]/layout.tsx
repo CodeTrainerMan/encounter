@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import "../globals.css";
 import SiteHeader from "@/components/SiteHeader";
-import SiteFooter from "@/components/SiteFooter";
 import { routing } from "@/i18n/routing";
 import { isLocale } from "@/lib/types";
 
@@ -37,6 +36,14 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * 站点外壳 = 一条顶栏 + 一列内容
+ * ------------------------------------------------------------
+ * 时间流是唯一的页面，所以这里按时间流的宽度收窄成 640px 一列：
+ * 页面不再是「一张大画布」，而是一条贴合的纵列。
+ * 横向留白交给各页面自己控制（时间流要贴边，表单页要留白），
+ * 外壳只负责居中与宽度。
+ */
 export default async function LocaleLayout({
   children,
   params,
@@ -50,12 +57,11 @@ export default async function LocaleLayout({
   return (
     <html lang={locale === "zh" ? "zh-CN" : "en"}>
       <body className="flex min-h-screen flex-col antialiased">
-        {/* 客户端组件（语言切换、表单、筛选等）需要 Provider 才能调用 useTranslations/useLocale；
+        {/* 客户端组件（语言切换、表单、表情等）需要 Provider 才能调用 useTranslations/useLocale；
             在 Server Component 中挂载时自动继承服务端语言与消息。 */}
         <NextIntlClientProvider>
           <SiteHeader />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-5 pb-24 pt-8 sm:px-8">{children}</main>
-          <SiteFooter />
+          <main className="mx-auto w-full max-w-[640px] flex-1 pb-24">{children}</main>
         </NextIntlClientProvider>
       </body>
     </html>

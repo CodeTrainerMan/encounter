@@ -18,10 +18,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteBase();
   const items = await listEncounters();
 
+  // 站点只有时间流与每条记录的详情页，列表页与关于页已经去掉
   const paths = [
     "",
-    "/encounters",
-    "/about",
     ...items.map((item) => `/encounters/${encodeURIComponent(item.slug)}`),
   ];
 

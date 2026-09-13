@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic";
 
 interface PageParams {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{ deleted?: string; error?: string }>;
 }
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
@@ -21,16 +22,20 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 }
 
 /**
- * 首页 = 一条时间流
+ * 时间流（首页）
  * ------------------------------------------------------------
- * 版面参考 X：没有导语式的 hero，也不按年份陈列，
- * 顶部只用一小段说明这个站点是从哪来的，下面直接就是
- * 「发一条 + 看所有」——打开站点就能用。
+ * 版式照 X 走：一列 640px、左右各一条 1px 分隔线的纵列，
+ * 顶端是发帖框，下面就是帖子本身——帖子之间也只有一条分隔线，
+ * 没有卡片、没有阴影、没有导语区块。
  *
- * 每条帖子下面可以直接点赞、留言，不必先点进详情页。
+ * 站点只剩这一处内容，所以这里不做任何「导航到别处」的事：
+ * 发帖框负责写，帖子负责看，回应（点赞 / 留言）就地完成。
  */
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: PageParams) {
   const t = await getTranslations("home");
+  const tFeed = await getTranslations("feed");
+  const tErrors = await getTranslations("errors");
+  const query = await searchParams;
 
   const [items, viewer] = await Promise.all([listEncounters(), getCurrentAuthor()]);
 
@@ -41,34 +46,39 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <section className="border-b border-line pb-8">
-        <p className="text-[11px] tracking-[0.32em] text-muted">{t("eyebrow")}</p>
-        <h1 className="mt-4 font-serif text-2xl leading-snug text-ink">{t("headline")}</h1>
-        <p className="mt-3 text-sm leading-loose text-ink-soft">{t("designNote")}</p>
-      </section>
+    <div className="min-h-[calc(100dvh-3.5rem)] sm:border-x sm:border-line">
+      {/* 删除记录后会带着 ?deleted=1 回到这里；失败则带 ?error=<errors 下的 key> */}
+      {query.deleted ? (
+        <p className="border-b border-line bg-hover px-4 py-2.5 text-[13px] text-ink-soft">
+          {tFeed("deleted")}
+        </p>
+      ) : null}
 
-      <div className="card mt-8 overflow-hidden">
-        <PostComposer author={viewer} authEnabled={isAuthConfigured} />
+      {query.error && tErrors.has(query.error) ? (
+        <p className="border-b border-line bg-hover px-4 py-2.5 text-[13px] text-red-500">
+          {tErrors(query.error)}
+        </p>
+      ) : null}
 
-        {items.length === 0 ? (
-          <div className="px-6 py-14 text-center">
-            <p className="font-serif text-base text-ink">{t("emptyTitle")}</p>
-            <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-muted">
-              {t("emptyDescription")}
-            </p>
-          </div>
-        ) : (
-          items.map((item) => (
-            <PostCard
-              key={item.id}
-              item={item}
-              reactions={reactions.get(item.id) ?? []}
-              commentCount={commentCounts.get(item.id) ?? 0}
-            />
-          ))
-        )}
-      </div>
+      <PostComposer author={viewer} authEnabled={isAuthConfigured} />
+
+      {items.length === 0 ? (
+        <div className="px-8 py-16 text-center">
+          <p className="text-lg font-bold text-ink">{t("emptyTitle")}</p>
+          <p className="mx-auto mt-1.5 max-w-xs text-sm leading-relaxed text-muted">
+            {t("emptyDescription")}
+          </p>
+        </div>
+      ) : (
+        items.map((item) => (
+          <PostCard
+            key={item.id}
+            item={item}
+            reactions={reactions.get(item.id) ?? []}
+            commentCount={commentCounts.get(item.id) ?? 0}
+          />
+        ))
+      )}
     </div>
   );
 }

@@ -1,26 +1,39 @@
 @import "tailwindcss";
 
+/**
+ * 设计令牌
+ * ------------------------------------------------------------
+ * 这套值照着 X 的观感走：白底、近黑正文、灰蓝次要信息、
+ * 极浅的分隔线、蓝色强调色；帖与帖之间只靠 1px 分隔线断开。
+ *
+ * 深色主题在文件末尾用 prefers-color-scheme 覆盖同一批令牌——
+ * Tailwind 生成的工具类引用的是 var(--color-*)，取值发生在运行时，
+ * 所以覆盖令牌就等于换肤，组件里不需要写任何 dark: 变体。
+ */
 @theme {
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", ui-sans-serif, system-ui,
     -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, "Times New Roman",
     serif;
 
-  --color-paper: #fbf9f6;
+  --color-paper: #ffffff;
   --color-surface: #ffffff;
-  --color-ink: #221e1a;
-  --color-ink-soft: #4b433a;
-  --color-muted: #8a7f73;
-  --color-line: #eae3d9;
-  --color-line-strong: #ddd3c5;
-  --color-accent: #b45309;
-  --color-accent-soft: #fdf4e8;
+  /* 行悬停：X 的帖子悬停是一层极淡的灰 */
+  --color-hover: #f7f9f9;
+  --color-ink: #0f1419;
+  --color-ink-soft: #536471;
+  --color-muted: #71767b;
+  --color-line: #eff3f4;
+  --color-line-strong: #cfd9de;
+  --color-accent: #1d9bf0;
+  --color-accent-soft: #e8f5fe;
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    color-scheme: light;
   }
 
   body {
@@ -30,8 +43,29 @@
   }
 
   ::selection {
-    background-color: #f6e0c6;
+    background-color: #bfe0fb;
     color: var(--color-ink);
+  }
+}
+
+/* 深色主题：跟随系统。放在 layer 之外，因此优先级高于 @theme 里的 :root 值 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-paper: #000000;
+    --color-surface: #000000;
+    --color-hover: #080808;
+    --color-ink: #e7e9ea;
+    --color-ink-soft: #d6d9db;
+    --color-muted: #71767b;
+    --color-line: #2f3336;
+    --color-line-strong: #3e4144;
+    --color-accent: #1d9bf0;
+    --color-accent-soft: #12293b;
+  }
+
+  ::selection {
+    background-color: #1d3a52;
   }
 }
 

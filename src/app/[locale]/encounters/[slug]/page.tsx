@@ -64,8 +64,8 @@ export default async function EncounterDetailPage({ params }: PageParams) {
   const selfHref = `/encounters/${encodeURIComponent(item.slug)}`;
 
   return (
-    <article className="mx-auto max-w-2xl">
-      <Link href="/encounters" className="text-xs text-muted transition-colors hover:text-accent">
+    <article className="mx-auto max-w-2xl px-4 pt-6 sm:px-6">
+      <Link href="/" className="text-xs text-muted transition-colors hover:text-accent">
         {t("back")}
       </Link>
 
@@ -112,14 +112,14 @@ export default async function EncounterDetailPage({ params }: PageParams) {
 
       {item.tags.length > 0 ? (
         <div className="mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
+          {/* 标签只是标记：筛选页已经去掉，这里就不再做成入口 */}
           {item.tags.map((tag) => (
-            <Link
+            <span
               key={tag}
-              href={{ pathname: "/encounters", query: { tag } }}
-              className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-muted transition-colors hover:border-accent hover:text-accent"
+              className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-muted"
             >
               # {tag}
-            </Link>
+            </span>
           ))}
         </div>
       ) : null}

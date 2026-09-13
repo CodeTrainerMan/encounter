@@ -200,8 +200,9 @@ export async function deleteEncounterAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "").trim();
   const actor = await getCurrentAuthor();
 
+  // 列表页已经去掉，删除后回到时间流，用查询参数带一句话说明结果
   if (!id) {
-    redirect({ href: { pathname: "/encounters" }, locale });
+    redirect({ href: { pathname: "/" }, locale });
   }
 
   try {
@@ -209,11 +210,11 @@ export async function deleteEncounterAction(formData: FormData): Promise<void> {
   } catch (error) {
     revalidatePath("/", "layout");
     redirect({
-      href: { pathname: "/encounters", query: { error: toErrorKey(error) } },
+      href: { pathname: "/", query: { error: toErrorKey(error) } },
       locale,
     });
   }
 
   revalidatePath("/", "layout");
-  redirect({ href: { pathname: "/encounters", query: { deleted: "1" } }, locale });
+  redirect({ href: { pathname: "/", query: { deleted: "1" } }, locale });
 }

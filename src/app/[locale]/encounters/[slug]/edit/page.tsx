@@ -52,7 +52,7 @@ export default async function EditEncounterPage({ params }: PageParams) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl px-4 pt-6 sm:px-6">
       <Link href={selfHref} className="text-xs text-muted transition-colors hover:text-accent">
         {t("back")}
       </Link>
